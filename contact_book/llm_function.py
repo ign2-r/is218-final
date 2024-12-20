@@ -1,8 +1,11 @@
+from dotenv import load_dotenv
 import os
 import requests
 from sqlalchemy.orm import sessionmaker
 from models import Contact
 from sqlalchemy import create_engine
+
+load_dotenv()
 
 DATABASE_URL = "sqlite:///contacts.db"
 engine = create_engine(DATABASE_URL, echo=False)
