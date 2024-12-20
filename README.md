@@ -1,5 +1,11 @@
 # Contact Book with LLM Integration
+---
 
+## Demo Video
+
+[![Watch the Demo](https://img.youtube.com/vi/lXHb464l0s8/0.jpg)](https://youtu.be/lXHb464l0s8)
+
+---
 ## Description
 This project is a contact management application that integrates a database (SQLite) with an LLM (Large Language Model) using the Groq API. The application allows you to:
 
