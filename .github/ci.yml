@@ -1,0 +1,54 @@
+name: CI Pipeline
+
+# Trigger the workflow on push and pull requests
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Set up Python environment
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    # Install dependencies
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    # Run pytest
+    - name: Run tests
+      run: pytest tests/
+
+  docker-build:
+    name: Build and Run Docker
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Build the Docker image
+    - name: Build Docker image
+      run: docker build -t contact_book .
+
+    # Test running the Docker container
+    - name: Run Docker container
+      run: docker run --env GROQ_API_KEY=$GROQ_API_KEY -it --rm contact_book
+
+    env:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
