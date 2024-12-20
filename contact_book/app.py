@@ -9,16 +9,17 @@ SessionLocal = sessionmaker(bind=engine)
 
 # Create the database and seed it with sample data
 def init_db():
+    # Reset the database
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
-    inspector = inspect(engine)
-    if not inspector.has_table("contacts"):
-        session = SessionLocal()
-        session.add_all([
-            Contact(name="Rockwell Dela Rosa", phone="123-456-7890"),
-            Contact(name="Cole Abney", phone="987-654-3210")
-        ])
-        session.commit()
-        session.close()
+    # Seed the database with test data
+    session = SessionLocal()
+    session.add_all([
+        Contact(name="Rockwell Dela Rosa", phone="123-456-7890"),
+        Contact(name="Cole Abney", phone="987-654-3210")
+    ])
+    session.commit()
+    session.close()
 
 if __name__ == "__main__":
     init_db()
