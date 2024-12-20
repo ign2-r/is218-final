@@ -1,3 +1,4 @@
+import os
 import requests
 from sqlalchemy.orm import sessionmaker
 from models import Contact
@@ -8,7 +9,9 @@ engine = create_engine(DATABASE_URL, echo=False)
 SessionLocal = sessionmaker(bind=engine)
 
 # Groq API Key and Endpoint
-API_KEY = "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"
+API_KEY = os.getenv("GROQ_API_KEY")
+if not API_KEY:
+    raise ValueError("GROQ_API_KEY environment variable is not set")
 API_URL = "https://api.groq.com/v1/chat/completions"
 
 # Retrieve a contact by name
