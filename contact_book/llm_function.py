@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import os
 import requests
+import json
 from sqlalchemy.orm import sessionmaker
 from models import Contact
 from sqlalchemy import create_engine
@@ -45,39 +46,51 @@ def function_call_example():
         "Content-Type": "application/json",
     }
 
-    # Send a request to Groq
-    response = requests.post(
-        API_URL,
-        headers=headers,
-        json={
-            "model": "llama2-70b-chat",
-            "messages": [
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": "What is John Doe’s phone number?"}
-            ],
-            "functions": [
-                {
-                    "name": "get_contact",
-                    "description": "Retrieve a contact's phone number by name.",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "name": {"type": "string", "description": "The contact's name"}
-                        },
-                        "required": ["name"]
-                    }
+    # Request payload
+    data = {
+        "model": "llama3-8b-8192",
+        "messages": [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "What is Rockwell Dela Rosa’s phone number?"}
+        ],
+        "functions": [
+            {
+                "name": "get_contact",
+                "description": "Retrieve a contact's phone number by name.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "name": {"type": "string", "description": "The contact's name"}
+                    },
+                    "required": ["name"]
                 }
-            ],
-            "function_call": {"name": "get_contact"}
-        },
-    )
+            }
+        ],
+        "function_call": {"name": "get_contact"}
+    }
+
+    # Send the request to Groq
+    response = requests.post(API_URL, headers=headers, json=data)
 
     # Parse the response
     if response.status_code == 200:
-        result = response.json()["choices"][0]["message"]["function_call"]["arguments"]
-        return get_contact(result["name"])
+        api_response = response.json()
+        message = api_response["choices"][0]["message"]
+
+        if "function_call" in message:
+            # Extract and parse the function arguments
+            function_call = message["function_call"]
+            arguments = json.loads(function_call["arguments"])  # Parse the JSON string
+            print("Parsed Arguments:", arguments)
+
+            # Use the parsed arguments
+            return get_contact(arguments["name"])
+        else:
+            return message["content"]
     else:
-        return {"error": "Failed to communicate with Groq API."}
+        # Log the error response for debugging
+        print("Error Response:", response.text)
+        raise Exception("Failed to communicate with Groq API.")
 
 if __name__ == "__main__":
     print(function_call_example())
