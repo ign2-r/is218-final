@@ -1,6 +1,5 @@
 name: CI Pipeline
 
-# Trigger the workflow on push and pull requests
 on:
   push:
     branches: [main]
@@ -23,15 +22,18 @@ jobs:
       with:
         python-version: "3.10"
 
-    # Install dependencies
+    # Navigate to the subdirectory and install dependencies
     - name: Install dependencies
       run: |
+        cd contact_book
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    # Run pytest
+    # Run pytest from the subdirectory
     - name: Run tests
-      run: pytest tests/
+      run: |
+        cd contact_book
+        pytest tests/
 
   docker-build:
     name: Build and Run Docker
@@ -44,7 +46,7 @@ jobs:
 
     # Build the Docker image
     - name: Build Docker image
-      run: docker build -t contact_book .
+      run: docker build -t contact_book ./contact_book
 
     # Test running the Docker container
     - name: Run Docker container
