@@ -1,3 +1,13 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Trigger workflow on push to the `main` branch
+  pull_request:
+    branches:
+      - main  # Trigger workflow on pull requests to the `main` branch
+
 jobs:
   test:
     name: Run Tests
