@@ -50,7 +50,7 @@ jobs:
 
     # Test running the Docker container
     - name: Run Docker container
-      run: docker run --env GROQ_API_KEY=$GROQ_API_KEY -it --rm contact_book
+      run: docker run --env GROQ_API_KEY=$GROQ_API_KEY --rm contact_book
 
     env:
       GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
