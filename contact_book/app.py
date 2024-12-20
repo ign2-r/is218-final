@@ -13,8 +13,8 @@ def init_db():
     if not inspector.has_table("contacts"):
         session = SessionLocal()
         session.add_all([
-            Contact(name="John Doe", phone="123-456-7890"),
-            Contact(name="Jane Smith", phone="987-654-3210")
+            Contact(name="Rockwell Dela Rosa", phone="123-456-7890"),
+            Contact(name="Cole Abney", phone="987-654-3210")
         ])
         session.commit()
         session.close()
