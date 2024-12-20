@@ -10,4 +10,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Command to run the application
-CMD ["python", "llm_function.py"]
+CMD ["sh", "-c", "python app.py && python llm_function.py"]
